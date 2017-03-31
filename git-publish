@@ -534,9 +534,9 @@ def main():
 
     to = options.to
     if not to and not options.edit:
-        to = git_get_config_list('branch', topic, 'gitpublishto')
+        to = get_profile_var_list(options.profile_name, 'to')
         if not to:
-            to = get_profile_var_list(options.profile_name, 'to')
+            to = git_get_config_list('branch', topic, 'gitpublishto')
     to = set(to)
 
     if options.forget_cc:
