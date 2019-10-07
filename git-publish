@@ -24,6 +24,10 @@ import subprocess
 import locale
 import shlex
 from email import message_from_file, header
+import logging
+
+logger = logging.getLogger('git-publish')
+info = logging.info
 
 VERSION = '1.5.1'
 
@@ -57,8 +61,7 @@ def cmdstr(cmd):
 
 def _popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **kwargs):
     '''Wrapper for subprocess.Popen()'''
-    if VERBOSE:
-        print(cmdstr(cmd))
+    info(cmdstr(cmd))
     return subprocess.Popen(cmd, stdout=stdout, stderr=stderr, **kwargs)
 
 def popen_lines(cmd, **kwargs):
@@ -580,10 +583,10 @@ def parse_args():
     return parser.parse_args()
 
 def main():
-    global VERBOSE
-
     options, args = parse_args()
-    VERBOSE = options.verbose
+
+    if options.verbose:
+        logging.basicConfig(stream=sys.stderr, level=logging.INFO, format='%(message)s')
 
     # The --edit option is for editing the cover letter without publishing a
     # new revision.  Therefore it doesn't make sense to combine it with options
