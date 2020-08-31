@@ -1,0 +1,17 @@
+#!/bin/bash
+source "$TESTS_DIR/functions.sh"
+
+msgfile="$TEST_DIR/message"
+
+cat >"$msgfile" <<EOF
+Cover letter
+
+This cover letter ✉️ has non-ascii characters.
+EOF
+
+git checkout -q -b mybranch
+GIT_EDITOR="cp $msgfile" git-publish \
+  --no-inspect-emails \
+  --to somebody@example.com \
+  -b HEAD^ \
+  --cover-letter
